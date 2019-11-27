@@ -7,17 +7,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var mobx_react_lite_1 = require("mobx-react-lite");
 var react_1 = __importStar(require("react"));
 var react_native_1 = require("react-native");
-exports.App = function () {
-    var _a = react_1.useState(0), count = _a[0], setCount = _a[1];
-    return (react_1.default.createElement(react_1.Fragment, null,
-        react_1.default.createElement(react_native_1.StatusBar, { barStyle: "dark-content" }),
-        react_1.default.createElement(react_native_1.View, { style: styles.container },
-            react_1.default.createElement(react_native_1.Text, { style: styles.welcome }, "Welcome to React Native!"),
-            react_1.default.createElement(react_native_1.Text, { style: styles.count }, count),
-            react_1.default.createElement(react_native_1.Button, { title: "Increment", onPress: function () { return setCount(count + 1); } }))));
-};
+var CounterStore_1 = require("./stores/CounterStore");
+exports.App = mobx_react_lite_1.observer(function () {
+    var counterStore = react_1.useContext(CounterStore_1.CounterStoreContext);
+    return (react_1.default.createElement(react_native_1.View, { style: styles.container },
+        react_1.default.createElement(react_native_1.Text, { style: styles.welcome }, "Welcome to React Native!"),
+        react_1.default.createElement(react_native_1.Text, { style: styles.count }, counterStore.count),
+        react_1.default.createElement(react_native_1.Button, { title: "Increment", onPress: function () { return counterStore.count++; } })));
+});
 var styles = react_native_1.StyleSheet.create({
     container: {
         flex: 1,

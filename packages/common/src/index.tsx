@@ -1,20 +1,19 @@
-import React, { Fragment, useState } from "react";
-import { Button, StatusBar, StyleSheet, Text, View } from "react-native";
+import { observer } from "mobx-react-lite";
+import React, { useContext } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { CounterStoreContext } from "./stores/CounterStore";
 
-export const App = () => {
-  const [count, setCount] = useState(0);
+export const App = observer(() => {
+  const counterStore = useContext(CounterStoreContext);
 
   return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.count}>{count}</Text>
-        <Button title="Increment" onPress={() => setCount(count + 1)} />
-      </View>
-    </Fragment>
+    <View style={styles.container}>
+      <Text style={styles.welcome}>Welcome to React Native!</Text>
+      <Text style={styles.count}>{counterStore.count}</Text>
+      <Button title="Increment" onPress={() => counterStore.count++} />
+    </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
