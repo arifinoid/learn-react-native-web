@@ -1,35 +1,28 @@
-import { observer } from "mobx-react-lite";
-import React, { useContext } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { CounterStoreContext } from "./stores/CounterStore";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Router } from "./Router";
 
-export const App = observer(() => {
-  const counterStore = useContext(CounterStoreContext);
-
+export const App = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to React Native!</Text>
-      <Text style={styles.count}>{counterStore.count}</Text>
-      <Button title="Increment" onPress={() => counterStore.count++} />
+      <View style={styles.wrapper}>
+        <Router />
+      </View>
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF"
+    height: "100%"
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  count: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
+  wrapper: {
+    flex: 1,
+    backgroundColor: "#F5FCFF",
+    width: "100%",
+    maxWidth: 425
   }
 });
