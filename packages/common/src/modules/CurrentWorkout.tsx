@@ -3,6 +3,7 @@ import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import { RootStoreContext } from "../stores/RootStore";
 import { WorkoutCard } from "../ui/WorkoutCard";
+import { WorkoutTimer } from "../ui/WorkoutTimer";
 
 const styles = StyleSheet.create({
   container: {
@@ -17,12 +18,19 @@ interface Props {}
 export const CurrentWorkout: React.FC<Props> = observer(() => {
   const rootStore = React.useContext(RootStoreContext);
 
+  React.useEffect(() => {
+    return () => {
+      rootStore.workoutTimerStore.stopTimer();
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       {rootStore.workoutStore.currentExercises.map((exec, index) => {
         return (
           <WorkoutCard
             onSetPress={setIndex => {
+              rootStore.workoutTimerStore.startTimer();
               const value = exec.sets[setIndex];
 
               let newValue: string;
@@ -30,6 +38,7 @@ export const CurrentWorkout: React.FC<Props> = observer(() => {
               if (value === "") {
                 newValue = `${exec.reps}`;
               } else if (value === "0") {
+                rootStore.workoutTimerStore.stopTimer();
                 newValue = "";
               } else {
                 newValue = `${parseInt(value) - 1}`;
@@ -44,6 +53,13 @@ export const CurrentWorkout: React.FC<Props> = observer(() => {
           />
         );
       })}
+      {rootStore.workoutTimerStore.isRunning ? (
+        <WorkoutTimer
+          percent={rootStore.workoutTimerStore.percent}
+          currentTime={rootStore.workoutTimerStore.display}
+          onXPress={() => rootStore.workoutTimerStore.stopTimer()}
+        />
+      ) : null}
     </View>
   );
 });
