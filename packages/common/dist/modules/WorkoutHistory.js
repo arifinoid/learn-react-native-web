@@ -1,4 +1,11 @@
 "use strict";
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -11,6 +18,7 @@ var mobx_react_lite_1 = require("mobx-react-lite");
 var React = __importStar(require("react"));
 var react_native_1 = require("react-native");
 var RootStore_1 = require("../stores/RootStore");
+var FloatingActionButton_1 = require("../ui/FloatingActionButton");
 var HistoryCard_1 = require("../ui/HistoryCard");
 var styles = react_native_1.StyleSheet.create({
     row: {
@@ -19,6 +27,9 @@ var styles = react_native_1.StyleSheet.create({
     cardContainer: {
         flex: 1,
         padding: 10
+    },
+    container: {
+        flex: 1
     }
 });
 exports.WorkoutHistory = mobx_react_lite_1.observer(function (_a) {
@@ -26,9 +37,7 @@ exports.WorkoutHistory = mobx_react_lite_1.observer(function (_a) {
     var rootStore = React.useContext(RootStore_1.RootStoreContext);
     var rows = [];
     Object.entries(rootStore.workoutStore.history).forEach(function (_a, i) {
-        // const hc = (
         var date = _a[0], exercises = _a[1];
-        // );
         if (i % 3 === 0) {
             rows.push([{ date: date, exercises: exercises }]);
         }
@@ -36,30 +45,7 @@ exports.WorkoutHistory = mobx_react_lite_1.observer(function (_a) {
             rows[rows.length - 1].push({ date: date, exercises: exercises });
         }
     });
-    return (React.createElement(react_native_1.View, null,
-        React.createElement(react_native_1.Text, null, "Workout History page"),
-        React.createElement(react_native_1.Button, { title: "Create workout", onPress: function () {
-                rootStore.workoutStore.currentExercises.push({
-                    exercise: "Squat",
-                    numSets: 5,
-                    reps: 5,
-                    sets: ["", "", "", "", "", ""],
-                    weight: 260
-                }, {
-                    exercise: "Bench Press",
-                    numSets: 5,
-                    reps: 5,
-                    sets: ["5", "5", "5", "5", "5", "5"],
-                    weight: 200
-                }, {
-                    exercise: "Deadlift",
-                    numSets: 1,
-                    reps: 5,
-                    sets: ["5", "x", "x", "x", "x", "x"],
-                    weight: 360
-                });
-                history.push("/current-workout");
-            } }),
+    return (React.createElement(react_native_1.View, { style: styles.container },
         React.createElement(react_native_1.FlatList, { renderItem: function (_a) {
                 var item = _a.item;
                 return (React.createElement(react_native_1.View, { style: styles.row },
@@ -73,5 +59,62 @@ exports.WorkoutHistory = mobx_react_lite_1.observer(function (_a) {
                     }),
                     item.length < 2 ? React.createElement(react_native_1.View, { style: styles.cardContainer }) : null,
                     item.length < 3 ? React.createElement(react_native_1.View, { style: styles.cardContainer }) : null));
-            }, data: rows, keyExtractor: function (item) { return item.reduce(function (pv, cv) { return pv + " " + cv.date; }, ""); } })));
+            }, data: rows, keyExtractor: function (item) { return item.reduce(function (pv, cv) { return pv + " " + cv.date; }, ""); } }),
+        React.createElement(FloatingActionButton_1.Fab, { onPress: function () {
+                if (!rootStore.workoutStore.hasCurrentWorkout) {
+                    var _a = rootStore.workoutStore, currentBarbellRow = _a.currentBarbellRow, currentDeadlift = _a.currentDeadlift, currentBenchPress = _a.currentBenchPress, currentOverheadPress = _a.currentOverheadPress, currentSquat = _a.currentSquat;
+                    var emptySets = ["", "", "", "", "", ""];
+                    if (rootStore.workoutStore.lastWorkoutType === "b") {
+                        rootStore.workoutStore.currentExercises.push({
+                            exercise: "Squat",
+                            numSets: 5,
+                            reps: 5,
+                            sets: __spreadArrays(emptySets),
+                            weight: currentSquat
+                        }, {
+                            exercise: "Bench Press",
+                            numSets: 5,
+                            reps: 5,
+                            sets: __spreadArrays(emptySets),
+                            weight: currentBenchPress
+                        }, {
+                            exercise: "Deadlift",
+                            numSets: 1,
+                            reps: 5,
+                            sets: ["", "x", "x", "x", "x", "x"],
+                            weight: currentDeadlift
+                        });
+                        rootStore.workoutStore.currentSquat += 5;
+                        rootStore.workoutStore.currentBenchPress += 5;
+                        rootStore.workoutStore.currentDeadlift += 5;
+                    }
+                    else {
+                        rootStore.workoutStore.currentExercises.push({
+                            exercise: "Squat",
+                            numSets: 5,
+                            reps: 5,
+                            sets: __spreadArrays(emptySets),
+                            weight: currentSquat
+                        }, {
+                            exercise: "Overhead Press",
+                            numSets: 5,
+                            reps: 5,
+                            sets: __spreadArrays(emptySets),
+                            weight: currentOverheadPress
+                        }, {
+                            exercise: "Barbell Row",
+                            numSets: 1,
+                            reps: 5,
+                            sets: __spreadArrays(emptySets),
+                            weight: currentBarbellRow
+                        });
+                        rootStore.workoutStore.currentSquat += 5;
+                        rootStore.workoutStore.currentOverheadPress += 5;
+                        rootStore.workoutStore.currentBarbellRow += 5;
+                    }
+                    rootStore.workoutStore.lastWorkoutType =
+                        rootStore.workoutStore.lastWorkoutType === "a" ? "b" : "a";
+                }
+                history.push("/current-workout");
+            } })));
 });

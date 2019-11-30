@@ -21,5 +21,6 @@ export declare class WorkoutStore {
     lastWorkoutType: WorkoutDay;
     currentExercises: CurrentExercise[];
     history: WorkoutHistory;
+    get hasCurrentWorkout(): boolean;
 }
 export {};
