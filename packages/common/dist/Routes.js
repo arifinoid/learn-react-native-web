@@ -11,5 +11,6 @@ exports.Routes = function () {
     return (react_1.default.createElement(index_1.Router, null,
         react_1.default.createElement(index_1.Switch, null,
             react_1.default.createElement(index_1.Route, { exact: true, path: "/", component: WorkoutHistory_1.WorkoutHistory }),
-            react_1.default.createElement(index_1.Route, { exact: true, path: "/current-workout", component: CurrentWorkout_1.CurrentWorkout }))));
+            react_1.default.createElement(index_1.Route, { exact: true, path: "/current-workout", component: CurrentWorkout_1.CurrentWorkout }),
+            react_1.default.createElement(index_1.Route, { exact: true, path: "/workout/:year/:month/:day", component: CurrentWorkout_1.CurrentWorkout }))));
 };
